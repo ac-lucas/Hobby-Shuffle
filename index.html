@@ -665,9 +665,10 @@
               class="form-input" 
               style="text-align:center; font-size:1.2rem; cursor:pointer;" 
               placeholder="🎨" 
-              maxlength="4"
+              maxlength="8"
               onfocus="handleEmojiFocus(this)"
               onclick="handleEmojiFocus(this)"
+              oninput="handleEmojiInput(this)"
             >
           </div>
 
@@ -798,6 +799,21 @@
           input.showPicker();
         } catch (e) {
           // Fallback if browser security context blocks showPicker
+        }
+      }
+    };
+
+    // Matches emoji sequences (base + variation selector + ZWJ chains) and flag pairs
+    const EMOJI_MATCH_RE = /(?:\p{Extended_Pictographic}(?:\uFE0F|\uFE0E)?(?:\u200D\p{Extended_Pictographic}(?:\uFE0F|\uFE0E)?)*)|(?:[\u{1F1E6}-\u{1F1FF}]{2})/gu;
+
+    // Strips anything typed/pasted that isn't a valid emoji, so the field only ever holds emoji
+    window.handleEmojiInput = function(input) {
+      const cleaned = (input.value.match(EMOJI_MATCH_RE) || []).join('');
+      if (input.value !== cleaned) {
+        const cursorWasAtEnd = input.selectionStart === input.value.length;
+        input.value = cleaned;
+        if (cursorWasAtEnd) {
+          input.setSelectionRange(cleaned.length, cleaned.length);
         }
       }
     };
@@ -1019,7 +1035,7 @@
       document.getElementById('formModalTitle').innerText = 'Add Hobby';
       document.getElementById('hobbyId').value = '';
       document.getElementById('hobbyForm').reset();
-      document.getElementById('inputEmoji').value = '🎨';
+      document.getElementById('inputEmoji').value = '';
       document.getElementById('inputLastDone').valueAsDate = new Date();
       document.getElementById('deleteBtn').style.display = 'none';
 
