@@ -21,6 +21,10 @@
     header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
     h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
 
+    .user-profile { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); }
+    .user-name { font-size: 0.85rem; font-weight: 500; }
+
     /* Controls & Toolbar */
     .toolbar { display: flex; flex-direction: column; gap: 12px; background: var(--card-bg); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 24px; }
     .toolbar-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
@@ -85,7 +89,9 @@
 
   <header>
     <h1>Hobby Portfolio</h1>
-    <button class="btn btn-primary" onclick="openAddModal()">+ Add Hobby</button>
+    <div class="user-profile" id="authContainer">
+      <button class="btn" id="loginBtn" onclick="login()">Sign in with Google</button>
+    </div>
   </header>
 
   <!-- Filter and Sort Controls -->
@@ -109,7 +115,10 @@
         </select>
       </div>
 
-      <button class="btn" onclick="triggerRandomizer()">🎲 Surprise Me</button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" onclick="triggerRandomizer()">🎲 Surprise Me</button>
+        <button class="btn btn-primary" id="addHobbyBtn" onclick="openAddModal()" style="display:none;">+ Add Hobby</button>
+      </div>
     </div>
   </div>
 
@@ -222,9 +231,10 @@
     </div>
   </div>
 
-  <!-- Firebase Integration Module -->
+  <!-- Unified Firebase Auth & DB Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
     import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
     /* === INSERT HERE: FIREBASE CONFIG START === */
@@ -239,51 +249,71 @@
     };
     /* === INSERT HERE: FIREBASE CONFIG END === */
 
-    // Initialize Firebase Realtime DB under the "hobbies" path
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getDatabase(app);
-    const hobbiesRef = ref(db, 'hobbies');
+    const provider = new GoogleAuthProvider();
 
-    // Realtime listener syncs database entries automatically
-    onValue(hobbiesRef, (snapshot) => {
-      const data = snapshot.val();
-      window.hobbies = [];
-      if (data) {
-        Object.keys(data).forEach(key => {
-          window.hobbies.push({ id: key, ...data[key] });
-        });
-      }
-      window.renderGrid();
-      if (window.activeHobbyId) {
-        window.updateDetailViewIfOpen();
-      }
-    });
-
-    /* === INSERT HERE: FIREBASE DATABASE ACTIONS === */
-    window.dbSaveHobby = function(hobbyData, id) {
-      if (id) {
-        set(ref(db, `hobbies/${id}`), hobbyData);
-      } else {
-        const newRef = push(hobbiesRef);
-        set(newRef, hobbyData);
-      }
-    };
-
-    window.dbDeleteHobby = function(id) {
-      remove(ref(db, `hobbies/${id}`));
-    };
-
-    window.dbUpdateStash = function(hobbyId, owned, wanted) {
-      set(ref(db, `hobbies/${hobbyId}/owned`), owned || []);
-      set(ref(db, `hobbies/${hobbyId}/wanted`), wanted || []);
-    };
-  </script>
-
-  <!-- App UI Logic Script -->
-  <script>
+    window.currentUser = null;
     window.hobbies = [];
     window.activeHobbyId = null;
 
+    let hobbiesRef = null;
+    let unsubscribeListener = null;
+
+    // Authentication Listener
+    onAuthStateChanged(auth, (user) => {
+      window.currentUser = user;
+      const authContainer = document.getElementById('authContainer');
+      const addHobbyBtn = document.getElementById('addHobbyBtn');
+
+      if (user) {
+        authContainer.innerHTML = `
+          <img class="user-avatar" src="${user.photoURL}" alt="${user.displayName}">
+          <span class="user-name">${user.displayName}</span>
+          <button class="btn btn-sm" onclick="logout()">Sign Out</button>
+        `;
+        addHobbyBtn.style.display = 'block';
+
+        // Connect user-specific DB ref: users/{uid}/hobbies
+        hobbiesRef = ref(db, `users/${user.uid}/hobbies`);
+        
+        if (unsubscribeListener) unsubscribeListener();
+        unsubscribeListener = onValue(hobbiesRef, (snapshot) => {
+          const data = snapshot.val();
+          window.hobbies = [];
+          if (data) {
+            Object.keys(data).forEach(key => {
+              window.hobbies.push({ id: key, ...data[key] });
+            });
+          }
+          window.renderGrid();
+          if (window.activeHobbyId) {
+            window.updateDetailViewIfOpen();
+          }
+        }, (error) => {
+          alert("Permission or Database Error: " + error.message);
+        });
+
+      } else {
+        authContainer.innerHTML = `<button class="btn" onclick="login()">Sign in with Google</button>`;
+        addHobbyBtn.style.display = 'none';
+        window.hobbies = [];
+        window.renderGrid();
+      }
+    });
+
+    window.login = function() {
+      signInWithPopup(auth, provider).catch((error) => {
+        alert("Authentication failed: " + error.message);
+      });
+    };
+
+    window.logout = function() {
+      signOut(auth);
+    };
+
+    // Helper functions
     function getAgingBadge(dateString) {
       if (!dateString) return 'Date unknown';
       const last = new Date(dateString);
@@ -315,6 +345,12 @@
 
     window.renderGrid = function() {
       const grid = document.getElementById('hobbyGrid');
+      
+      if (!window.currentUser) {
+        grid.innerHTML = `<div class="empty-state">Please sign in to view and manage your hobbies.</div>`;
+        return;
+      }
+
       const energyFilter = document.getElementById('energyFilter').value;
       const sortBy = document.getElementById('sortBy').value;
 
@@ -391,6 +427,7 @@
     }
 
     window.addStashItem = function(type) {
+      if (!window.currentUser) return;
       const hobby = window.hobbies.find(h => h.id === window.activeHobbyId);
       if (!hobby) return;
 
@@ -406,11 +443,13 @@
         if (type === 'wanted') wanted.push(val);
 
         input.value = '';
-        window.dbUpdateStash(hobby.id, owned, wanted);
+        set(ref(db, `users/${window.currentUser.uid}/hobbies/${hobby.id}/owned`), owned);
+        set(ref(db, `users/${window.currentUser.uid}/hobbies/${hobby.id}/wanted`), wanted);
       }
     };
 
     window.removeStashItem = function(type, index) {
+      if (!window.currentUser) return;
       const hobby = window.hobbies.find(h => h.id === window.activeHobbyId);
       if (!hobby) return;
 
@@ -420,7 +459,8 @@
       if (type === 'owned') owned.splice(index, 1);
       if (type === 'wanted') wanted.splice(index, 1);
 
-      window.dbUpdateStash(hobby.id, owned, wanted);
+      set(ref(db, `users/${window.currentUser.uid}/hobbies/${hobby.id}/owned`), owned);
+      set(ref(db, `users/${window.currentUser.uid}/hobbies/${hobby.id}/wanted`), wanted);
     };
 
     window.openAddModal = function() {
@@ -453,6 +493,8 @@
 
     window.saveHobby = function(e) {
       e.preventDefault();
+      if (!window.currentUser) return alert("Please sign in first!");
+
       const id = document.getElementById('hobbyId').value;
       const title = document.getElementById('inputTitle').value.trim();
       const energy = parseInt(document.getElementById('inputEnergy').value);
@@ -476,14 +518,25 @@
         wanted: existing ? (existing.wanted || []) : []
       };
 
-      window.dbSaveHobby(hobbyData, id || null);
+      if (id) {
+        set(ref(db, `users/${window.currentUser.uid}/hobbies/${id}`), hobbyData)
+          .catch(err => alert("Save Error: " + err.message));
+      } else {
+        const userHobbiesRef = ref(db, `users/${window.currentUser.uid}/hobbies`);
+        const newRef = push(userHobbiesRef);
+        set(newRef, hobbyData)
+          .catch(err => alert("Save Error: " + err.message));
+      }
+
       closeModal('formModalOverlay');
     };
 
     window.deleteHobby = function() {
+      if (!window.currentUser) return;
       const id = document.getElementById('hobbyId').value;
       if (confirm('Are you sure you want to delete this hobby?')) {
-        window.dbDeleteHobby(id);
+        remove(ref(db, `users/${window.currentUser.uid}/hobbies/${id}`))
+          .catch(err => alert("Delete Error: " + err.message));
         closeModal('formModalOverlay');
       }
     };
