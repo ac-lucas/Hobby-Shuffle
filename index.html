@@ -3,33 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hobby Vault</title>
+  <title>Hobby Shuffle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-dark: #0f0716;
-      --panel-bg: rgba(28, 16, 48, 0.7);
+      /* Light Barbie Palette */
+      --bg-main: #fff5f8;
+      --panel-bg: rgba(255, 255, 255, 0.85);
       --panel-border: rgba(255, 105, 180, 0.25);
-      --pink-glow: #ff2a85;
-      --purple-glow: #9d4edf;
-      --cyan-glow: #00f0ff;
-      --text-main: #f8f0fc;
-      --text-muted: #b8a6cd;
+      --barbie-pink: #ff1493;
+      --barbie-dark-pink: #d8006f;
+      --barbie-soft-pink: #ffe4ef;
+      --barbie-accent: #e0247d;
+      --text-dark: #3a0d25;
+      --text-muted: #8c5270;
       
-      --energy-low-bg: rgba(46, 204, 113, 0.2);
-      --energy-low-border: #2ecc71;
-      --energy-low-text: #60ef9b;
+      --energy-low-bg: #e8fadf;
+      --energy-low-border: #82c91e;
+      --energy-low-text: #2b6100;
       
-      --energy-med-bg: rgba(241, 196, 15, 0.2);
-      --energy-med-border: #f1c40f;
-      --energy-med-text: #ffeb3b;
+      --energy-med-bg: #fff3bf;
+      --energy-med-border: #fcc419;
+      --energy-med-text: #855200;
       
-      --energy-high-bg: rgba(155, 89, 182, 0.25);
-      --energy-high-border: #9b59b6;
-      --energy-high-text: #e0aaff;
+      --energy-high-bg: #f3d9fa;
+      --energy-high-border: #cc5de8;
+      --energy-high-text: #630c80;
     }
 
     * {
@@ -39,13 +41,13 @@
     }
 
     body {
-      background-color: var(--bg-dark);
+      background-color: var(--bg-main);
       background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 42, 133, 0.18) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(157, 78, 223, 0.2) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 60%);
+        radial-gradient(circle at 15% 15%, rgba(255, 182, 193, 0.4) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(255, 105, 180, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 50% 30%, rgba(255, 240, 245, 0.8) 0%, transparent 60%);
       background-attachment: fixed;
-      color: var(--text-main);
+      color: var(--text-dark);
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       padding: 2rem 1.5rem;
@@ -56,7 +58,7 @@
       margin: 0 auto;
     }
 
-    /* Closet Header */
+    /* Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -68,15 +70,15 @@
       border-radius: 24px;
       padding: 1.25rem 2rem;
       margin-bottom: 2rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 25px rgba(230, 0, 115, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
     h1 {
       font-family: 'Outfit', sans-serif;
       font-weight: 900;
-      font-size: 1.8rem;
+      font-size: 2rem;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 20%, #ff80bf 60%, var(--cyan-glow) 100%);
+      background: linear-gradient(135deg, var(--barbie-pink) 0%, var(--barbie-dark-pink) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-transform: uppercase;
@@ -89,33 +91,33 @@
     }
 
     .user-avatar {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      border: 2px solid var(--pink-glow);
-      box-shadow: 0 0 10px rgba(255, 42, 133, 0.5);
+      border: 2px solid var(--barbie-pink);
+      box-shadow: 0 0 10px rgba(255, 20, 147, 0.25);
     }
 
     .user-name {
       font-weight: 700;
       font-size: 0.95rem;
-      color: var(--text-main);
+      color: var(--text-dark);
     }
 
     /* Buttons */
     .btn {
-      background: linear-gradient(135deg, #ff2a85 0%, #9d4edf 100%);
+      background: linear-gradient(135deg, #ff3399 0%, #ff0066 100%);
       color: #fff;
       border: none;
       padding: 0.65rem 1.25rem;
-      border-radius: 12px;
+      border-radius: 14px;
       font-weight: 800;
       font-family: 'Outfit', sans-serif;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 4px 15px rgba(255, 42, 133, 0.4);
+      box-shadow: 0 4px 15px rgba(255, 0, 102, 0.3);
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -123,7 +125,7 @@
 
     .btn:hover {
       transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 6px 20px rgba(255, 42, 133, 0.6), 0 0 12px var(--cyan-glow);
+      box-shadow: 0 6px 20px rgba(255, 0, 102, 0.45);
     }
 
     .btn-sm {
@@ -133,22 +135,25 @@
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: none;
+      background: #ffffff;
+      color: var(--barbie-dark-pink);
+      border: 1.5px solid rgba(255, 20, 147, 0.3);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      background: var(--barbie-soft-pink);
+      border-color: var(--barbie-pink);
+      box-shadow: 0 4px 12px rgba(255, 20, 147, 0.15);
     }
 
     .btn-danger {
-      background: linear-gradient(135deg, #ff416c, #ff4b2b);
-      box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+      background: linear-gradient(135deg, #ff4d4d, #d90429);
+      box-shadow: 0 4px 15px rgba(217, 4, 41, 0.3);
+      color: #fff;
     }
 
-    /* Controls */
+    /* Controls Panel */
     .controls-panel {
       background: var(--panel-bg);
       backdrop-filter: blur(12px);
@@ -161,6 +166,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 1.25rem;
+      box-shadow: 0 8px 25px rgba(230, 0, 115, 0.05);
     }
 
     .filter-section {
@@ -174,7 +180,7 @@
       font-size: 0.85rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       color: var(--text-muted);
     }
 
@@ -196,7 +202,8 @@
       align-items: center;
       gap: 0.4rem;
       border: 1.5px solid transparent;
-      opacity: 0.55;
+      opacity: 0.6;
+      background: #ffffff;
     }
 
     .chip.active {
@@ -205,33 +212,33 @@
     }
 
     .chip-low {
-      background: var(--energy-low-bg);
       border-color: var(--energy-low-border);
       color: var(--energy-low-text);
     }
 
     .chip-low.active {
-      box-shadow: 0 0 12px rgba(46, 204, 113, 0.5);
+      background: var(--energy-low-bg);
+      box-shadow: 0 0 10px rgba(130, 201, 30, 0.3);
     }
 
     .chip-med {
-      background: var(--energy-med-bg);
       border-color: var(--energy-med-border);
       color: var(--energy-med-text);
     }
 
     .chip-med.active {
-      box-shadow: 0 0 12px rgba(241, 196, 15, 0.5);
+      background: var(--energy-med-bg);
+      box-shadow: 0 0 10px rgba(252, 196, 25, 0.3);
     }
 
     .chip-high {
-      background: var(--energy-high-bg);
       border-color: var(--energy-high-border);
       color: var(--energy-high-text);
     }
 
     .chip-high.active {
-      box-shadow: 0 0 12px rgba(155, 89, 182, 0.6);
+      background: var(--energy-high-bg);
+      box-shadow: 0 0 10px rgba(204, 93, 232, 0.3);
     }
 
     .action-group {
@@ -241,9 +248,9 @@
     }
 
     .select-styled {
-      background: rgba(15, 7, 22, 0.8);
-      color: var(--text-main);
-      border: 1px solid var(--panel-border);
+      background: #ffffff;
+      color: var(--text-dark);
+      border: 1.5px solid var(--panel-border);
       padding: 0.6rem 1rem;
       border-radius: 12px;
       font-weight: 700;
@@ -252,7 +259,7 @@
       cursor: pointer;
     }
 
-    /* Grid */
+    /* Grid & Cards */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -260,9 +267,9 @@
     }
 
     .card {
-      background: var(--panel-bg);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(12px);
-      border: 1px solid var(--panel-border);
+      border: 1.5px solid rgba(255, 182, 193, 0.6);
       border-radius: 20px;
       padding: 1.5rem;
       cursor: pointer;
@@ -273,6 +280,7 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 180px;
+      box-shadow: 0 4px 15px rgba(230, 0, 115, 0.05);
     }
 
     .card::before {
@@ -281,15 +289,14 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--pink-glow), var(--purple-glow), var(--cyan-glow));
-      opacity: 0.7;
+      height: 4px;
+      background: linear-gradient(90deg, #ff66b2, var(--barbie-pink), #ff99cc);
     }
 
     .card:hover {
       transform: translateY(-6px) scale(1.02);
-      border-color: rgba(255, 105, 180, 0.6);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 42, 133, 0.3);
+      border-color: var(--barbie-pink);
+      box-shadow: 0 12px 25px rgba(255, 20, 147, 0.15);
     }
 
     .card-top {
@@ -308,7 +315,7 @@
       font-weight: 800;
       font-size: 1.3rem;
       line-height: 1.2;
-      color: #fff;
+      color: var(--text-dark);
       margin-bottom: 0.5rem;
     }
 
@@ -326,8 +333,9 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: var(--barbie-soft-pink);
+      border: 1px solid rgba(255, 105, 180, 0.3);
+      color: var(--barbie-dark-pink);
     }
 
     .tag-low { background: var(--energy-low-bg); border-color: var(--energy-low-border); color: var(--energy-low-text); }
@@ -337,7 +345,7 @@
     .card-footer {
       font-size: 0.8rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 0.4rem;
@@ -349,17 +357,18 @@
       padding: 4rem 2rem;
       background: var(--panel-bg);
       border-radius: 20px;
-      border: 1px dashed var(--panel-border);
+      border: 2px dashed var(--panel-border);
       color: var(--text-muted);
       font-size: 1.1rem;
+      font-weight: 600;
     }
 
     /* Modals & Overlays */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(10, 3, 18, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(80, 10, 45, 0.4);
+      backdrop-filter: blur(8px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -376,9 +385,9 @@
     }
 
     .modal {
-      background: #180b2a;
-      border: 1px solid var(--pink-glow);
-      box-shadow: 0 0 40px rgba(255, 42, 133, 0.3);
+      background: #ffffff;
+      border: 2px solid var(--barbie-pink);
+      box-shadow: 0 15px 40px rgba(255, 20, 147, 0.2);
       border-radius: 24px;
       width: 100%;
       max-width: 580px;
@@ -393,7 +402,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--barbie-soft-pink);
       padding-bottom: 1rem;
     }
 
@@ -401,50 +410,89 @@
       font-family: 'Outfit', sans-serif;
       font-size: 1.6rem;
       font-weight: 900;
-      color: #fff;
+      color: var(--text-dark);
     }
 
     .close-btn {
-      background: transparent;
+      background: var(--barbie-soft-pink);
       border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
+      color: var(--barbie-dark-pink);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.1rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
     }
 
-    /* Form Controls */
+    .close-btn:hover {
+      background: var(--barbie-pink);
+      color: #fff;
+    }
+
+    /* Form & Inline Controls */
     .form-group {
       margin-bottom: 1.25rem;
     }
 
     .form-label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 0.8rem;
+      font-weight: 800;
       margin-bottom: 0.4rem;
-      color: var(--text-muted);
+      color: var(--barbie-dark-pink);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .form-input, .form-textarea, .form-select {
       width: 100%;
-      background: rgba(10, 3, 18, 0.6);
-      border: 1px solid rgba(255, 105, 180, 0.3);
+      background: #fff8fa;
+      border: 1.5px solid rgba(255, 105, 180, 0.4);
       border-radius: 12px;
       padding: 0.75rem 1rem;
-      color: #fff;
+      color: var(--text-dark);
       font-family: inherit;
       font-size: 0.95rem;
       outline: none;
+      transition: all 0.2s ease;
     }
 
-    .form-input:focus, .form-textarea:focus {
-      border-color: var(--pink-glow);
-      box-shadow: 0 0 10px rgba(255, 42, 133, 0.4);
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--barbie-pink);
+      box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.15);
+      background: #ffffff;
     }
 
-    /* Detail View Stash Lists */
+    .inline-date-input {
+      background: #fff8fa;
+      border: 1.5px solid rgba(255, 105, 180, 0.4);
+      border-radius: 8px;
+      padding: 0.25rem 0.5rem;
+      color: var(--text-dark);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .save-indicator {
+      font-size: 0.75rem;
+      color: var(--barbie-dark-pink);
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      margin-left: 0.5rem;
+    }
+
+    .save-indicator.show {
+      opacity: 1;
+    }
+
+    /* Stash Lists */
     .stash-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -453,17 +501,17 @@
     }
 
     .stash-box {
-      background: rgba(10, 3, 18, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #fff8fa;
+      border: 1.5px solid rgba(255, 182, 193, 0.5);
       border-radius: 16px;
       padding: 1rem;
     }
 
     .stash-title {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 800;
       text-transform: uppercase;
-      color: var(--pink-glow);
+      color: var(--barbie-dark-pink);
       margin-bottom: 0.75rem;
     }
 
@@ -479,10 +527,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255, 255, 255, 0.05);
+      background: #ffffff;
+      border: 1px solid rgba(255, 182, 193, 0.4);
       padding: 0.4rem 0.6rem;
       border-radius: 8px;
       font-size: 0.85rem;
+      color: var(--text-dark);
     }
 
     .stash-input-group {
@@ -495,7 +545,7 @@
 
   <div class="container">
     <header>
-      <h1>Hobby Vault</h1>
+      <h1>Hobby Shuffle</h1>
       <div id="authContainer" class="auth-box">
         <!-- Auth state injected via JS -->
       </div>
@@ -530,27 +580,42 @@
   </div>
 
   <!-- Detail Modal -->
-  <div id="detailModalOverlay" class="modal-overlay">
+  <div id="detailModalOverlay" class="modal-overlay" onclick="handleBackdropClick(event, 'detailModalOverlay')">
     <div class="modal">
       <div class="modal-header">
         <div style="display:flex; align-items:center; gap:0.75rem;">
-          <span id="detailEmoji" style="font-size: 2rem;"></span>
+          <span id="detailEmoji" style="font-size: 2.2rem;"></span>
           <div>
             <h2 id="detailTitle" class="modal-title">Hobby Detail</h2>
-            <div id="detailMeta" style="font-size:0.8rem; color:var(--text-muted);"></div>
+            <div id="detailMeta" style="font-size:0.8rem; color:var(--text-muted); font-weight:700;"></div>
           </div>
         </div>
         <button class="close-btn" onclick="closeModal('detailModalOverlay')">✕</button>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Current Focus</label>
-        <div id="detailFocus" style="font-size:0.95rem; line-height:1.4;"></div>
+      <!-- Quick Edit: Last Active Date -->
+      <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; background:var(--barbie-soft-pink); padding:0.6rem 1rem; border-radius:12px;">
+        <label class="form-label" style="margin-bottom:0;">Last Active:</label>
+        <input type="date" id="detailInlineDate" class="inline-date-input" onchange="saveInlineField('lastDone', this.value)">
+        <span id="inlineDateSaveMsg" class="save-indicator">Saved!</span>
       </div>
 
+      <!-- Quick Edit: Current Focus -->
       <div class="form-group">
-        <label class="form-label">Inspiration & Resources</label>
-        <div id="detailResources" style="font-size:0.95rem; line-height:1.4;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label class="form-label">Current Focus / Project</label>
+          <span id="inlineFocusSaveMsg" class="save-indicator">Saved!</span>
+        </div>
+        <textarea id="detailInlineFocus" class="form-textarea" rows="2" placeholder="What are you working on right now?" onblur="saveInlineField('focus', this.value)"></textarea>
+      </div>
+
+      <!-- Quick Edit: Resources & Notes -->
+      <div class="form-group">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label class="form-label">Resources & Notes</label>
+          <span id="inlineResourcesSaveMsg" class="save-indicator">Saved!</span>
+        </div>
+        <textarea id="detailInlineResources" class="form-textarea" rows="2" placeholder="Links, guides, ideas..." onblur="saveInlineField('resources', this.value)"></textarea>
       </div>
 
       <div class="stash-grid">
@@ -564,7 +629,7 @@
         </div>
 
         <div class="stash-box">
-          <div class="stash-title">Wishlist</div>
+          <div class="stash-title">Wishlist / Wanted</div>
           <ul id="detailWantedList" class="stash-list"></ul>
           <div class="stash-input-group">
             <input type="text" id="newWantedInput" class="form-input" style="padding:0.4rem;" placeholder="Add to wishlist...">
@@ -573,15 +638,15 @@
         </div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; margin-top:1.5rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.1);">
-        <button class="btn btn-secondary" onclick="editCurrentHobby()">Edit Hobby</button>
-        <button class="btn btn-secondary" onclick="closeModal('detailModalOverlay')">Done</button>
+      <div style="display:flex; justify-content:space-between; margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--barbie-soft-pink);">
+        <button class="btn btn-secondary" onclick="editCurrentHobby()">Full Edit</button>
+        <button class="btn" onclick="closeModal('detailModalOverlay')">Done</button>
       </div>
     </div>
   </div>
 
-  <!-- Form Modal (Add / Edit) -->
-  <div id="formModalOverlay" class="modal-overlay">
+  <!-- Form Modal (Add / Full Edit) -->
+  <div id="formModalOverlay" class="modal-overlay" onclick="handleBackdropClick(event, 'formModalOverlay')">
     <div class="modal">
       <div class="modal-header">
         <h2 id="formModalTitle" class="modal-title">Add Hobby</h2>
@@ -620,7 +685,7 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Location</label>
+          <label class="form-label">Location / Spot</label>
           <input type="text" id="inputLocation" class="form-input" placeholder="e.g. Desk, Studio, Balcony">
         </div>
 
@@ -630,7 +695,7 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Resources & Links</label>
+          <label class="form-label">Resources & Notes</label>
           <textarea id="inputResources" class="form-textarea" rows="2" placeholder="Links, guides, inspiration..."></textarea>
         </div>
 
@@ -645,7 +710,7 @@
     </div>
   </div>
 
-  <!-- Unified Firebase Auth & DB Script -->
+  <!-- Firebase Auth & DB Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
@@ -746,12 +811,6 @@
       return '';
     }
 
-    function linkify(text) {
-      if (!text) return 'None';
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener" style="color:var(--cyan-glow);">${url}</a>`);
-    }
-
     window.toggleChip = function(el, level) {
       el.classList.toggle('active');
       if (window.selectedEnergies.includes(level)) {
@@ -823,10 +882,43 @@
       document.getElementById('detailEmoji').innerText = h.emoji || '🎨';
       document.getElementById('detailTitle').innerText = h.title;
       document.getElementById('detailMeta').innerText = `${getAgingBadge(h.lastDone)} • ${energyLabel(h.energy)} ${h.location ? '• ' + h.location : ''}`;
-      document.getElementById('detailFocus').innerHTML = linkify(h.focus);
-      document.getElementById('detailResources').innerHTML = linkify(h.resources);
+      
+      // Sync inline quick-edit fields without disrupting active typing
+      const inlineDate = document.getElementById('detailInlineDate');
+      const inlineFocus = document.getElementById('detailInlineFocus');
+      const inlineResources = document.getElementById('detailInlineResources');
+
+      if (document.activeElement !== inlineDate) inlineDate.value = h.lastDone || '';
+      if (document.activeElement !== inlineFocus) inlineFocus.value = h.focus || '';
+      if (document.activeElement !== inlineResources) inlineResources.value = h.resources || '';
 
       renderStashLists(h);
+    };
+
+    window.saveInlineField = function(field, val) {
+      if (!window.currentUser || !window.activeHobbyId) return;
+      const hobby = window.hobbies.find(h => h.id === window.activeHobbyId);
+      if (!hobby) return;
+
+      // Only save if the value actually changed
+      if (hobby[field] === val) return;
+
+      set(ref(db, `hobbies/${hobby.id}/${field}`), val)
+        .then(() => {
+          let msgId = '';
+          if (field === 'lastDone') msgId = 'inlineDateSaveMsg';
+          if (field === 'focus') msgId = 'inlineFocusSaveMsg';
+          if (field === 'resources') msgId = 'inlineResourcesSaveMsg';
+
+          if (msgId) {
+            const el = document.getElementById(msgId);
+            if (el) {
+              el.classList.add('show');
+              setTimeout(() => el.classList.remove('show'), 2000);
+            }
+          }
+        })
+        .catch(err => console.error("Inline save error:", err));
     };
 
     function renderStashLists(hobby) {
@@ -991,6 +1083,12 @@
 
     window.closeModal = function(id) {
       document.getElementById(id).classList.remove('active');
+    };
+
+    window.handleBackdropClick = function(event, modalId) {
+      if (event.target.id === modalId) {
+        closeModal(modalId);
+      }
     };
   </script>
 </body>
