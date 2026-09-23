@@ -83,6 +83,20 @@
     .form-row .form-group { flex: 1; }
 
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 48px 16px; color: var(--text-muted); font-size: 0.95rem; }
+    .energy-low {
+    background-color: #d4edda;
+    color: #155724;
+    }
+
+    .energy-med {
+    background-color: #fff3cd;
+    color: #856404;
+    }
+
+    .energy-high {
+    background-color: #e2d9f3;
+    color: #4a235a;
+    }  
   </style>
 </head>
 <body>
@@ -98,13 +112,9 @@
   <div class="toolbar">
     <div class="toolbar-row">
       <div class="filter-group">
-        <label for="energyFilter" style="font-size:0.8rem; font-weight:600;">Energy:</label>
-        <select id="energyFilter" onchange="renderGrid()">
-          <option value="ALL">All Energy Levels</option>
-          <option value="1">1 - Low Energy</option>
-          <option value="2">2 - Medium Energy</option>
-          <option value="3">3 - High Energy</option>
-        </select>
+        <label><input type="checkbox" class="energy-checkbox" value="1" onchange="toggleEnergyFilter()"> Low Energy</label>
+        <label><input type="checkbox" class="energy-checkbox" value="2" onchange="toggleEnergyFilter()"> Medium Energy</label>
+        <label><input type="checkbox" class="energy-checkbox" value="3" onchange="toggleEnergyFilter()"> High Energy</label>
 
         <label for="sortBy" style="font-size:0.8rem; font-weight:600; margin-left:8px;">Sort By:</label>
         <select id="sortBy" onchange="renderGrid()">
@@ -231,7 +241,7 @@
     </div>
   </div>
 
- <!-- Unified Firebase Auth & DB Script -->
+<!-- Unified Firebase Auth & DB Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
@@ -258,7 +268,6 @@
     window.hobbies = [];
     window.activeHobbyId = null;
 
-    // Direct root reference to hobbies
     const hobbiesRef = ref(db, 'hobbies');
     let unsubscribeListener = null;
 
@@ -312,7 +321,6 @@
       signOut(auth);
     };
 
-    // Helper functions
     function getAgingBadge(dateString) {
       if (!dateString) return 'Date unknown';
       const last = new Date(dateString);
@@ -336,11 +344,23 @@
       return '';
     }
 
+    function energyTagClass(level) {
+      if (level == 1) return 'energy-low';
+      if (level == 2) return 'energy-med';
+      if (level == 3) return 'energy-high';
+      return '';
+    }
+
     function linkify(text) {
       if (!text) return 'None';
       const urlRegex = /(https?:\/\/[^\s]+)/g;
       return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
     }
+
+    // Energy Filter helpers
+    window.toggleEnergyFilter = function() {
+      window.renderGrid();
+    };
 
     window.renderGrid = function() {
       const grid = document.getElementById('hobbyGrid');
@@ -350,10 +370,16 @@
         return;
       }
 
-      const energyFilter = document.getElementById('energyFilter').value;
+      // Collect checked energy filters
+      const selectedEnergies = Array.from(document.querySelectorAll('.energy-checkbox:checked'))
+                                    .map(cb => parseInt(cb.value));
+
       const sortBy = document.getElementById('sortBy').value;
 
-      let filtered = window.hobbies.filter(h => energyFilter === 'ALL' || h.energy == energyFilter);
+      let filtered = window.hobbies.filter(h => {
+        if (selectedEnergies.length === 0) return true; // show all if none checked
+        return selectedEnergies.includes(parseInt(h.energy));
+      });
 
       filtered.sort((a, b) => {
         if (sortBy === 'recent-desc') return new Date(b.lastDone) - new Date(a.lastDone);
@@ -364,7 +390,7 @@
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="empty-state">No hobbies found. Click "+ Add Hobby" to create your first entry!</div>`;
+        grid.innerHTML = `<div class="empty-state">No hobbies match your filter.</div>`;
         return;
       }
 
@@ -377,7 +403,7 @@
             </div>
             <div class="card-tags">
               ${h.location ? `<span class="tag">${h.location}</span>` : ''}
-              <span class="tag tag-energy">${energyLabel(h.energy)}</span>
+              <span class="tag ${energyTagClass(h.energy)}">${energyLabel(h.energy)}</span>
             </div>
             <div class="card-footer">
               ${getAgingBadge(h.lastDone)}
@@ -420,7 +446,10 @@
       wantedUl.innerHTML = (hobby.wanted || []).map((item, idx) => `
         <li class="stash-item">
           <span>${item}</span>
-          <button class="btn btn-sm" onclick="removeStashItem('wanted', ${idx})">✕</button>
+          <div style="display:flex; gap:4px;">
+            <button class="btn btn-sm" title="Move to Owned" onclick="moveWantedToOwned(${idx})">→ Owned</button>
+            <button class="btn btn-sm" onclick="removeStashItem('wanted', ${idx})">✕</button>
+          </div>
         </li>
       `).join('') || '<li style="font-size:0.8rem; color:var(--text-muted);">No wanted supplies listed.</li>';
     }
@@ -442,6 +471,22 @@
         if (type === 'wanted') wanted.push(val);
 
         input.value = '';
+        set(ref(db, `hobbies/${hobby.id}/owned`), owned);
+        set(ref(db, `hobbies/${hobby.id}/wanted`), wanted);
+      }
+    };
+
+    window.moveWantedToOwned = function(index) {
+      if (!window.currentUser) return;
+      const hobby = window.hobbies.find(h => h.id === window.activeHobbyId);
+      if (!hobby) return;
+
+      let owned = hobby.owned ? [...hobby.owned] : [];
+      let wanted = hobby.wanted ? [...hobby.wanted] : [];
+
+      const itemToMove = wanted.splice(index, 1)[0];
+      if (itemToMove) {
+        owned.push(itemToMove);
         set(ref(db, `hobbies/${hobby.id}/owned`), owned);
         set(ref(db, `hobbies/${hobby.id}/wanted`), wanted);
       }
