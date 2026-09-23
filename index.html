@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hobby Shuffle</title>
-  <link rel="icon" type="image/png" href="y2k_barbie_pink_star.png">
-  <link rel="apple-touch-icon" href="y2k_barbie_pink_star.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2ODAgNjgwIj4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjY4MCIgaGVpZ2h0PSI2ODAiIHJ4PSIxMjAiIGZpbGw9IiNmZmU0ZWYiLz4KPHBhdGggZD0iTTEyIDBDMTIgMCAxMy42MiA4LjM4IDE2IDEwLjVDMTguMzggMTIuNjIgMjQgMTIgMjQgMTJDMjQgMTIgMTguMzggMTMuNjIgMTYgMTZDMTMuNjIgMTguMzggMTIgMjQgMTIgMjRDMTIgMjQgMTAuMzggMTguMzggOCAxNkM1LjYyIDEzLjYyIDAgMTIgMCAxMkMwIDEyIDUuNjIgMTAuMzggOCA4QzEwLjM4IDUuNjIgMTIgMCAxMiAwWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYyLDE2Mikgc2NhbGUoMTYpIiBmaWxsPSIjZmY1ZmFlIiBzdHJva2U9Im5vbmUiLz4KPHBhdGggZD0iTTEyIDBDMTIgMCAxMy42MiA4LjM4IDE2IDEwLjVDMTguMzggMTIuNjIgMjQgMTIgMjQgMTJDMjQgMTIgMTguMzggMTMuNjIgMTYgMTZDMTMuNjIgMTguMzggMTIgMjQgMTIgMjRDMTIgMjQgMTAuMzggMTguMzggOCAxNkM1LjYyIDEzLjYyIDAgMTIgMCAxMkMwIDEyIDUuNjIgMTAuMzggOCA4QzEwLjM4IDUuNjIgMTIgMCAxMiAwWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTQ4LDE0OCkgc2NhbGUoMTYpIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNmZjE0OTMiIHN0cm9rZS13aWR0aD0iMC42Ii8+Cjwvc3ZnPgo=">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2ODAgNjgwIj4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjY4MCIgaGVpZ2h0PSI2ODAiIHJ4PSIxMjAiIGZpbGw9IiNmZmU0ZWYiLz4KPHBhdGggZD0iTTEyIDBDMTIgMCAxMy42MiA4LjM4IDE2IDEwLjVDMTguMzggMTIuNjIgMjQgMTIgMjQgMTJDMjQgMTIgMTguMzggMTMuNjIgMTYgMTZDMTMuNjIgMTguMzggMTIgMjQgMTIgMjRDMTIgMjQgMTAuMzggMTguMzggOCAxNkM1LjYyIDEzLjYyIDAgMTIgMCAxMkMwIDEyIDUuNjIgMTAuMzggOCA4QzEwLjM4IDUuNjIgMTIgMCAxMiAwWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYyLDE2Mikgc2NhbGUoMTYpIiBmaWxsPSIjZmY1ZmFlIiBzdHJva2U9Im5vbmUiLz4KPHBhdGggZD0iTTEyIDBDMTIgMCAxMy42MiA4LjM4IDE2IDEwLjVDMTguMzggMTIuNjIgMjQgMTIgMjQgMTJDMjQgMTIgMTguMzggMTMuNjIgMTYgMTZDMTMuNjIgMTguMzggMTIgMjQgMTIgMjRDMTIgMjQgMTAuMzggMTguMzggOCAxNkM1LjYyIDEzLjYyIDAgMTIgMCAxMkMwIDEyIDUuNjIgMTAuMzggOCA4QzEwLjM4IDUuNjIgMTIgMCAxMiAwWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTQ4LDE0OCkgc2NhbGUoMTYpIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNmZjE0OTMiIHN0cm9rZS13aWR0aD0iMC42Ii8+Cjwvc3ZnPgo=">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -53,6 +53,7 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       padding: 2rem 1.5rem;
+      overflow-x: hidden;
     }
 
     .container {
@@ -392,9 +393,10 @@
       box-shadow: 0 15px 40px rgba(255, 20, 147, 0.2);
       border-radius: 24px;
       width: 100%;
-      max-width: 580px;
+      max-width: min(580px, calc(100vw - 3rem));
       max-height: 90vh;
       overflow-y: auto;
+      overflow-x: hidden;
       padding: 2rem;
       position: relative;
     }
@@ -413,6 +415,7 @@
       font-size: 1.6rem;
       font-weight: 900;
       color: var(--text-dark);
+      overflow-wrap: anywhere;
     }
 
     .close-btn {
@@ -535,23 +538,47 @@
       flex-direction: column;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
+      max-height: 180px;
+      overflow-y: auto;
     }
 
     .stash-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.5rem;
       background: #ffffff;
       border: 1px solid rgba(255, 182, 193, 0.4);
       padding: 0.4rem 0.6rem;
       border-radius: 8px;
       font-size: 0.85rem;
       color: var(--text-dark);
+      min-width: 0;
+    }
+
+    .stash-item span {
+      overflow-wrap: anywhere;
+      min-width: 0;
     }
 
     .stash-input-group {
       display: flex;
       gap: 0.4rem;
+    }
+
+    .add-hobby-mobile-slot:not(:empty) {
+      margin-bottom: 2rem;
+    }
+
+    .btn-full-row {
+      width: 100%;
+      justify-content: center;
+    }
+
+    @media (max-width: 640px) {
+      .stash-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -564,6 +591,8 @@
         <!-- Auth state injected via JS -->
       </div>
     </header>
+
+    <div id="addHobbyMobileSlot" class="add-hobby-mobile-slot"></div>
 
     <div class="controls-panel">
       <div class="filter-section">
@@ -1139,6 +1168,25 @@
         closeModal(modalId);
       }
     };
+
+    function relocateAddHobbyBtn() {
+      const btn = document.getElementById('addHobbyBtn');
+      const mobileSlot = document.getElementById('addHobbyMobileSlot');
+      const desktopSlot = document.querySelector('.action-group');
+      if (!btn || !mobileSlot || !desktopSlot) return;
+
+      if (window.matchMedia('(max-width: 640px)').matches) {
+        if (btn.parentElement !== mobileSlot) mobileSlot.appendChild(btn);
+        btn.classList.add('btn-full-row');
+      } else {
+        if (btn.parentElement !== desktopSlot) desktopSlot.appendChild(btn);
+        btn.classList.remove('btn-full-row');
+      }
+    }
+
+    window.addEventListener('resize', relocateAddHobbyBtn);
+    document.addEventListener('DOMContentLoaded', relocateAddHobbyBtn);
+    relocateAddHobbyBtn();
   </script>
 </body>
 </html>
