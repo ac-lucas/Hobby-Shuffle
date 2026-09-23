@@ -1,253 +1,656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hobby Portfolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hobby Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg: #f8f9fa;
-      --card-bg: #ffffff;
-      --text: #212529;
-      --text-muted: #6c757d;
-      --border: #e9ecef;
-      --accent: #222222;
-      --radius: 12px;
+      --bg-dark: #0f0716;
+      --panel-bg: rgba(28, 16, 48, 0.7);
+      --panel-border: rgba(255, 105, 180, 0.25);
+      --pink-glow: #ff2a85;
+      --purple-glow: #9d4edf;
+      --cyan-glow: #00f0ff;
+      --text-main: #f8f0fc;
+      --text-muted: #b8a6cd;
+      
+      --energy-low-bg: rgba(46, 204, 113, 0.2);
+      --energy-low-border: #2ecc71;
+      --energy-low-text: #60ef9b;
+      
+      --energy-med-bg: rgba(241, 196, 15, 0.2);
+      --energy-med-border: #f1c40f;
+      --energy-med-text: #ffeb3b;
+      
+      --energy-high-bg: rgba(155, 89, 182, 0.25);
+      --energy-high-border: #9b59b6;
+      --energy-high-text: #e0aaff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 24px 16px; max-width: 1080px; margin: 0 auto; }
-    
-    header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
-    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
-
-    .user-profile { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); }
-    .user-name { font-size: 0.85rem; font-weight: 500; }
-
-    /* Controls & Toolbar */
-    .toolbar { display: flex; flex-direction: column; gap: 12px; background: var(--card-bg); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 24px; }
-    .toolbar-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
-    .filter-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    
-    select, input[type="text"], input[type="date"], textarea {
-      padding: 8px 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 0.85rem; background: #fff;
-    }
-    
-    .btn { padding: 8px 16px; border: 1px solid #ced4da; border-radius: 20px; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.15s; }
-    .btn:hover { background: #f1f3f5; }
-    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .btn-primary:hover { background: #000; }
-    .btn-sm { padding: 4px 10px; font-size: 0.75rem; border-radius: 6px; }
-
-    /* Gallery Grid */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; display: flex; flex-direction: column; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    
-    .card-img { width: 100%; height: 150px; background: #e9ecef; object-fit: cover; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.85rem; }
-    .card-body { padding: 14px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .card-title { font-size: 1.05rem; font-weight: 600; }
-    
-    .card-tags { display: flex; gap: 6px; font-size: 0.75rem; flex-wrap: wrap; margin-top: 2px; }
-    .tag { background: #f1f3f5; padding: 2px 8px; border-radius: 6px; color: #495057; font-weight: 500; }
-    .tag-energy { background: #e7f5ff; color: #1971c2; }
-    
-    .card-footer { margin-top: auto; padding-top: 8px; font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
-
-    /* Modal / Drawers */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 100; padding: 16px; }
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal { background: #fff; width: 100%; max-width: 520px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-    .close-btn { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
-    
-    .modal-section { margin-top: 20px; }
-    .modal-section h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
-    
-    .note-box { background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
-    .note-box a { color: #1971c2; text-decoration: underline; word-break: break-all; }
-
-    /* Stash List Items */
-    .stash-group { margin-bottom: 12px; }
-    .stash-group-title { font-size: 0.8rem; font-weight: 600; color: #495057; margin-bottom: 6px; }
-    .stash-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .stash-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--bg); border-radius: 6px; font-size: 0.85rem; }
-    .stash-input-row { display: flex; gap: 6px; margin-top: 6px; }
-    .stash-input-row input { flex-grow: 1; }
-
-    /* Form Layout */
-    .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
-    .form-group label { font-size: 0.8rem; font-weight: 600; color: #495057; }
-    .form-row { display: flex; gap: 12px; }
-    .form-row .form-group { flex: 1; }
-
-    .empty-state { grid-column: 1 / -1; text-align: center; padding: 48px 16px; color: var(--text-muted); font-size: 0.95rem; }
-    .energy-low {
-    background-color: #d4edda;
-    color: #155724;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .energy-med {
-    background-color: #fff3cd;
-    color: #856404;
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 42, 133, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(157, 78, 223, 0.2) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
     }
 
-    .energy-high {
-    background-color: #e2d9f3;
-    color: #4a235a;
-    }  
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Closet Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      padding: 1.25rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 20%, #ff80bf 60%, var(--cyan-glow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .auth-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--pink-glow);
+      box-shadow: 0 0 10px rgba(255, 42, 133, 0.5);
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    /* Buttons */
+    .btn {
+      background: linear-gradient(135deg, #ff2a85 0%, #9d4edf 100%);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 15px rgba(255, 42, 133, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(255, 42, 133, 0.6), 0 0 12px var(--cyan-glow);
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
+      border-radius: 8px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+    }
+
+    /* Controls */
+    .controls-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .filter-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    /* Energy Chips */
+    .energy-chips {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .chip {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1.5px solid transparent;
+      opacity: 0.55;
+    }
+
+    .chip.active {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .chip-low {
+      background: var(--energy-low-bg);
+      border-color: var(--energy-low-border);
+      color: var(--energy-low-text);
+    }
+
+    .chip-low.active {
+      box-shadow: 0 0 12px rgba(46, 204, 113, 0.5);
+    }
+
+    .chip-med {
+      background: var(--energy-med-bg);
+      border-color: var(--energy-med-border);
+      color: var(--energy-med-text);
+    }
+
+    .chip-med.active {
+      box-shadow: 0 0 12px rgba(241, 196, 15, 0.5);
+    }
+
+    .chip-high {
+      background: var(--energy-high-bg);
+      border-color: var(--energy-high-border);
+      color: var(--energy-high-text);
+    }
+
+    .chip-high.active {
+      box-shadow: 0 0 12px rgba(155, 89, 182, 0.6);
+    }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .select-styled {
+      background: rgba(15, 7, 22, 0.8);
+      color: var(--text-main);
+      border: 1px solid var(--panel-border);
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 180px;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--pink-glow), var(--purple-glow), var(--cyan-glow));
+      opacity: 0.7;
+    }
+
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: rgba(255, 105, 180, 0.6);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 42, 133, 0.3);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .card-emoji {
+      font-size: 2.2rem;
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      padding: 0.25rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .tag-low { background: var(--energy-low-bg); border-color: var(--energy-low-border); color: var(--energy-low-text); }
+    .tag-med { background: var(--energy-med-bg); border-color: var(--energy-med-border); color: var(--energy-med-text); }
+    .tag-high { background: var(--energy-high-bg); border-color: var(--energy-high-border); color: var(--energy-high-text); }
+
+    .card-footer {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      background: var(--panel-bg);
+      border-radius: 20px;
+      border: 1px dashed var(--panel-border);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Modals & Overlays */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 3, 18, 0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #180b2a;
+      border: 1px solid var(--pink-glow);
+      box-shadow: 0 0 40px rgba(255, 42, 133, 0.3);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Form Controls */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      background: rgba(10, 3, 18, 0.6);
+      border: 1px solid rgba(255, 105, 180, 0.3);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--pink-glow);
+      box-shadow: 0 0 10px rgba(255, 42, 133, 0.4);
+    }
+
+    /* Detail View Stash Lists */
+    .stash-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .stash-box {
+      background: rgba(10, 3, 18, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .stash-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--pink-glow);
+      margin-bottom: 0.75rem;
+    }
+
+    .stash-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stash-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    .stash-input-group {
+      display: flex;
+      gap: 0.4rem;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Hobby Portfolio</h1>
-    <div class="user-profile" id="authContainer">
-      <button class="btn" id="loginBtn" onclick="login()">Sign in with Google</button>
-    </div>
-  </header>
+  <div class="container">
+    <header>
+      <h1>Hobby Vault</h1>
+      <div id="authContainer" class="auth-box">
+        <!-- Auth state injected via JS -->
+      </div>
+    </header>
 
-  <!-- Filter and Sort Controls -->
-  <div class="toolbar">
-    <div class="toolbar-row">
-      <div class="filter-group">
-        <label><input type="checkbox" class="energy-checkbox" value="1" onchange="toggleEnergyFilter()"> Low Energy</label>
-        <label><input type="checkbox" class="energy-checkbox" value="2" onchange="toggleEnergyFilter()"> Medium Energy</label>
-        <label><input type="checkbox" class="energy-checkbox" value="3" onchange="toggleEnergyFilter()"> High Energy</label>
+    <div class="controls-panel">
+      <div class="filter-section">
+        <span class="filter-label">Energy Level:</span>
+        <div class="energy-chips">
+          <div class="chip chip-low" onclick="toggleChip(this, 1)">Low Energy</div>
+          <div class="chip chip-med" onclick="toggleChip(this, 2)">Medium Energy</div>
+          <div class="chip chip-high" onclick="toggleChip(this, 3)">High Energy</div>
+        </div>
+      </div>
 
-        <label for="sortBy" style="font-size:0.8rem; font-weight:600; margin-left:8px;">Sort By:</label>
-        <select id="sortBy" onchange="renderGrid()">
-          <option value="recent-desc">Last Done (Most Recent First)</option>
-          <option value="recent-asc">Last Done (Least Recent First)</option>
-          <option value="energy-asc">Energy (Low to High)</option>
-          <option value="energy-desc">Energy (High to Low)</option>
+      <div class="action-group">
+        <select id="sortBy" class="select-styled" onchange="renderGrid()">
+          <option value="recent-desc">Most Recent First</option>
+          <option value="recent-asc">Oldest / Resting First</option>
+          <option value="energy-asc">Energy: Low to High</option>
+          <option value="energy-desc">Energy: High to Low</option>
         </select>
-      </div>
-
-      <div style="display:flex; gap:8px;">
-        <button class="btn" onclick="triggerRandomizer()">🎲 Surprise Me</button>
-        <button class="btn btn-primary" id="addHobbyBtn" onclick="openAddModal()" style="display:none;">+ Add Hobby</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Grid -->
-  <main class="grid" id="hobbyGrid"></main>
-
-  <!-- Detail View Modal -->
-  <div class="modal-overlay" id="detailModalOverlay" onclick="closeModal('detailModalOverlay')">
-    <div class="modal" onclick="event.stopPropagation()">
-      <button class="close-btn" onclick="closeModal('detailModalOverlay')">✕</button>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-right:24px;">
-        <h2 id="detailTitle">Hobby Name</h2>
-        <button class="btn btn-sm" onclick="editCurrentHobby()">Edit</button>
-      </div>
-      <p id="detailMeta" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;"></p>
-
-      <div class="modal-section">
-        <h3>Where I Left Off</h3>
-        <div class="note-box" id="detailFocus">None</div>
-      </div>
-
-      <div class="modal-section">
-        <h3>Useful Resources</h3>
-        <div class="note-box" id="detailResources">None</div>
-      </div>
-
-      <!-- Supplies / Stash Section -->
-      <div class="modal-section">
-        <h3>My Stash</h3>
         
-        <!-- Owned Items -->
-        <div class="stash-group">
-          <div class="stash-group-title">Owned Supplies</div>
-          <ul class="stash-list" id="detailOwnedList"></ul>
-          <div class="stash-input-row">
-            <input type="text" id="newOwnedInput" placeholder="Add owned supply...">
-            <button class="btn btn-sm" onclick="addStashItem('owned')">Add</button>
+        <button class="btn btn-secondary" onclick="triggerRandomizer()">Randomizer</button>
+        <button id="addHobbyBtn" class="btn" style="display:none;" onclick="openAddModal()">+ Add Hobby</button>
+      </div>
+    </div>
+
+    <div id="hobbyGrid" class="grid">
+      <!-- Cards injected dynamically -->
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div id="detailModalOverlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+          <span id="detailEmoji" style="font-size: 2rem;"></span>
+          <div>
+            <h2 id="detailTitle" class="modal-title">Hobby Detail</h2>
+            <div id="detailMeta" style="font-size:0.8rem; color:var(--text-muted);"></div>
+          </div>
+        </div>
+        <button class="close-btn" onclick="closeModal('detailModalOverlay')">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Current Focus</label>
+        <div id="detailFocus" style="font-size:0.95rem; line-height:1.4;"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Inspiration & Resources</label>
+        <div id="detailResources" style="font-size:0.95rem; line-height:1.4;"></div>
+      </div>
+
+      <div class="stash-grid">
+        <div class="stash-box">
+          <div class="stash-title">Owned Supplies</div>
+          <ul id="detailOwnedList" class="stash-list"></ul>
+          <div class="stash-input-group">
+            <input type="text" id="newOwnedInput" class="form-input" style="padding:0.4rem;" placeholder="Add supply...">
+            <button class="btn btn-sm" onclick="addStashItem('owned')">+</button>
           </div>
         </div>
 
-        <!-- Wanted Items -->
-        <div class="stash-group" style="margin-top: 14px;">
-          <div class="stash-group-title">Wanted / Wishlist</div>
-          <ul class="stash-list" id="detailWantedList"></ul>
-          <div class="stash-input-row">
-            <input type="text" id="newWantedInput" placeholder="Add wanted supply...">
-            <button class="btn btn-sm" onclick="addStashItem('wanted')">Add</button>
+        <div class="stash-box">
+          <div class="stash-title">Wishlist</div>
+          <ul id="detailWantedList" class="stash-list"></ul>
+          <div class="stash-input-group">
+            <input type="text" id="newWantedInput" class="form-input" style="padding:0.4rem;" placeholder="Add to wishlist...">
+            <button class="btn btn-sm" onclick="addStashItem('wanted')">+</button>
           </div>
         </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:1.5rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.1);">
+        <button class="btn btn-secondary" onclick="editCurrentHobby()">Edit Hobby</button>
+        <button class="btn btn-secondary" onclick="closeModal('detailModalOverlay')">Done</button>
       </div>
     </div>
   </div>
 
-  <!-- Add / Edit Hobby Modal -->
-  <div class="modal-overlay" id="formModalOverlay" onclick="closeModal('formModalOverlay')">
-    <div class="modal" onclick="event.stopPropagation()">
-      <button class="close-btn" onclick="closeModal('formModalOverlay')">✕</button>
-      <h2 id="formModalTitle">Add Hobby</h2>
-      <form id="hobbyForm" onsubmit="saveHobby(event)" style="margin-top:16px;">
+  <!-- Form Modal (Add / Edit) -->
+  <div id="formModalOverlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="formModalTitle" class="modal-title">Add Hobby</h2>
+        <button class="close-btn" onclick="closeModal('formModalOverlay')">✕</button>
+      </div>
+
+      <form id="hobbyForm" onsubmit="saveHobby(event)">
         <input type="hidden" id="hobbyId">
-        
-        <div class="form-group">
-          <label for="inputTitle">Hobby Name</label>
-          <input type="text" id="inputTitle" required placeholder="e.g. Jewelry Making">
+
+        <div style="display:grid; grid-template-columns:80px 1fr; gap:1rem;">
+          <div class="form-group">
+            <label class="form-label">Emoji</label>
+            <input type="text" id="inputEmoji" class="form-input" style="text-align:center; font-size:1.2rem;" placeholder="🎨" maxlength="4">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Hobby Title</label>
+            <input type="text" id="inputTitle" class="form-input" required placeholder="e.g. Jewelry Making">
+          </div>
         </div>
 
-        <div class="form-row">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <div class="form-group">
-            <label for="inputEnergy">Energy Level</label>
-            <select id="inputEnergy" required>
-              <option value="1">1 - Low Energy</option>
-              <option value="2" selected>2 - Medium Energy</option>
-              <option value="3">3 - High Energy</option>
+            <label class="form-label">Energy Level</label>
+            <select id="inputEnergy" class="form-select">
+              <option value="1">Low Energy</option>
+              <option value="2">Medium Energy</option>
+              <option value="3">High Energy</option>
             </select>
           </div>
+
           <div class="form-group">
-            <label for="inputLastDone">Last Done Date</label>
-            <input type="date" id="inputLastDone" required>
+            <label class="form-label">Last Active Date</label>
+            <input type="date" id="inputLastDone" class="form-input" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="inputLocation">Location Tag</label>
-          <input type="text" id="inputLocation" placeholder="e.g. Desk, Balcony, Kitchen">
+          <label class="form-label">Location</label>
+          <input type="text" id="inputLocation" class="form-input" placeholder="e.g. Desk, Studio, Balcony">
         </div>
 
         <div class="form-group">
-          <label for="inputImg">Image URL (Optional)</label>
-          <input type="text" id="inputImg" placeholder="https://...">
+          <label class="form-label">Current Focus</label>
+          <textarea id="inputFocus" class="form-textarea" rows="2" placeholder="What are you currently working on?"></textarea>
         </div>
 
         <div class="form-group">
-          <label for="inputFocus">Where I Left Off (Notes)</label>
-          <textarea id="inputFocus" rows="3" placeholder="Current sub-project focus or next steps..."></textarea>
+          <label class="form-label">Resources & Links</label>
+          <textarea id="inputResources" class="form-textarea" rows="2" placeholder="Links, guides, inspiration..."></textarea>
         </div>
 
-        <div class="form-group">
-          <label for="inputResources">Useful Resources (Links & References)</label>
-          <textarea id="inputResources" rows="3" placeholder="Paste tutorial links, video bookmarks, or notes..."></textarea>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-          <button type="button" class="btn" id="deleteBtn" style="color:#e03131; border-color:#ffa8a8; display:none;" onclick="deleteHobby()">Delete</button>
-          <div style="display:flex; gap:8px; margin-left:auto;">
-            <button type="button" class="btn" onclick="closeModal('formModalOverlay')">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Hobby</button>
+        <div style="display:flex; justify-content:space-between; gap:1rem; margin-top:1.5rem;">
+          <button type="button" id="deleteBtn" class="btn btn-danger" onclick="deleteHobby()" style="display:none;">Delete</button>
+          <div style="display:flex; gap:0.5rem; margin-left:auto;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('formModalOverlay')">Cancel</button>
+            <button type="submit" class="btn">Save Hobby</button>
           </div>
         </div>
       </form>
     </div>
   </div>
 
-<!-- Unified Firebase Auth & DB Script -->
+  <!-- Unified Firebase Auth & DB Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
     import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
-    /* === INSERT HERE: FIREBASE CONFIG START === */
     const firebaseConfig = {
       apiKey: "AIzaSyDqPjoCg0gYKmxBkF3-7eqYilmLdJqvGU8",
       authDomain: "house-motives.firebaseapp.com",
@@ -257,7 +660,6 @@
       messagingSenderId: "338470965043",
       appId: "1:338470965043:web:6285a617886f5b87ce3846"
     };
-    /* === INSERT HERE: FIREBASE CONFIG END === */
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -267,11 +669,11 @@
     window.currentUser = null;
     window.hobbies = [];
     window.activeHobbyId = null;
+    window.selectedEnergies = [];
 
     const hobbiesRef = ref(db, 'hobbies');
     let unsubscribeListener = null;
 
-    // Authentication Listener
     onAuthStateChanged(auth, (user) => {
       window.currentUser = user;
       const authContainer = document.getElementById('authContainer');
@@ -281,9 +683,9 @@
         authContainer.innerHTML = `
           <img class="user-avatar" src="${user.photoURL}" alt="${user.displayName}">
           <span class="user-name">${user.displayName}</span>
-          <button class="btn btn-sm" onclick="logout()">Sign Out</button>
+          <button class="btn btn-sm btn-secondary" onclick="logout()">Sign Out</button>
         `;
-        addHobbyBtn.style.display = 'block';
+        addHobbyBtn.style.display = 'inline-flex';
 
         if (unsubscribeListener) unsubscribeListener();
         unsubscribeListener = onValue(hobbiesRef, (snapshot) => {
@@ -311,15 +713,8 @@
       }
     });
 
-    window.login = function() {
-      signInWithPopup(auth, provider).catch((error) => {
-        alert("Authentication failed: " + error.message);
-      });
-    };
-
-    window.logout = function() {
-      signOut(auth);
-    };
+    window.login = () => signInWithPopup(auth, provider);
+    window.logout = () => signOut(auth);
 
     function getAgingBadge(dateString) {
       if (!dateString) return 'Date unknown';
@@ -330,7 +725,7 @@
       if (isNaN(diffDays)) return 'Date unknown';
       if (diffDays === 0) return 'Done today';
       if (diffDays === 1) return 'Done yesterday';
-      if (diffDays < 7) return `Active ${diffDays} days ago`;
+      if (diffDays < 7) return `Active ${diffDays}d ago`;
       if (diffDays < 14) return 'Resting 1 week';
       if (diffDays < 30) return `Resting ${Math.floor(diffDays / 7)} weeks`;
       if (diffDays < 365) return `Resting ${Math.floor(diffDays / 30)} months`;
@@ -339,26 +734,31 @@
 
     function energyLabel(level) {
       if (level == 1) return 'Low Energy';
-      if (level == 2) return 'Medium Energy';
+      if (level == 2) return 'Med Energy';
       if (level == 3) return 'High Energy';
       return '';
     }
 
     function energyTagClass(level) {
-      if (level == 1) return 'energy-low';
-      if (level == 2) return 'energy-med';
-      if (level == 3) return 'energy-high';
+      if (level == 1) return 'tag-low';
+      if (level == 2) return 'tag-med';
+      if (level == 3) return 'tag-high';
       return '';
     }
 
     function linkify(text) {
       if (!text) return 'None';
       const urlRegex = /(https?:\/\/[^\s]+)/g;
-      return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
+      return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener" style="color:var(--cyan-glow);">${url}</a>`);
     }
 
-    // Energy Filter helpers
-    window.toggleEnergyFilter = function() {
+    window.toggleChip = function(el, level) {
+      el.classList.toggle('active');
+      if (window.selectedEnergies.includes(level)) {
+        window.selectedEnergies = window.selectedEnergies.filter(l => l !== level);
+      } else {
+        window.selectedEnergies.push(level);
+      }
       window.renderGrid();
     };
 
@@ -366,19 +766,15 @@
       const grid = document.getElementById('hobbyGrid');
       
       if (!window.currentUser) {
-        grid.innerHTML = `<div class="empty-state">Please sign in to view and manage your hobbies.</div>`;
+        grid.innerHTML = `<div class="empty-state">Please sign in to view your hobbies.</div>`;
         return;
       }
-
-      // Collect checked energy filters
-      const selectedEnergies = Array.from(document.querySelectorAll('.energy-checkbox:checked'))
-                                    .map(cb => parseInt(cb.value));
 
       const sortBy = document.getElementById('sortBy').value;
 
       let filtered = window.hobbies.filter(h => {
-        if (selectedEnergies.length === 0) return true; // show all if none checked
-        return selectedEnergies.includes(parseInt(h.energy));
+        if (window.selectedEnergies.length === 0) return true;
+        return window.selectedEnergies.includes(parseInt(h.energy));
       });
 
       filtered.sort((a, b) => {
@@ -396,18 +792,18 @@
 
       grid.innerHTML = filtered.map(h => `
         <div class="card" onclick="openDetailModal('${h.id}')">
-          ${h.img ? `<img class="card-img" src="${h.img}" alt="${h.title}">` : `<div class="card-img">[ ${h.title} ]</div>`}
-          <div class="card-body">
-            <div class="card-header">
-              <div class="card-title">${h.title}</div>
-            </div>
+          <div class="card-top">
+            <span class="card-emoji">${h.emoji || '🎨'}</span>
+            <span class="tag ${energyTagClass(h.energy)}">${energyLabel(h.energy)}</span>
+          </div>
+          <div>
+            <div class="card-title">${h.title}</div>
             <div class="card-tags">
               ${h.location ? `<span class="tag">${h.location}</span>` : ''}
-              <span class="tag ${energyTagClass(h.energy)}">${energyLabel(h.energy)}</span>
             </div>
-            <div class="card-footer">
-              ${getAgingBadge(h.lastDone)}
-            </div>
+          </div>
+          <div class="card-footer">
+            ${getAgingBadge(h.lastDone)}
           </div>
         </div>
       `).join('');
@@ -424,6 +820,7 @@
       const h = window.hobbies.find(item => item.id === window.activeHobbyId);
       if (!h) return;
 
+      document.getElementById('detailEmoji').innerText = h.emoji || '🎨';
       document.getElementById('detailTitle').innerText = h.title;
       document.getElementById('detailMeta').innerText = `${getAgingBadge(h.lastDone)} • ${energyLabel(h.energy)} ${h.location ? '• ' + h.location : ''}`;
       document.getElementById('detailFocus').innerHTML = linkify(h.focus);
@@ -439,7 +836,7 @@
       ownedUl.innerHTML = (hobby.owned || []).map((item, idx) => `
         <li class="stash-item">
           <span>${item}</span>
-          <button class="btn btn-sm" onclick="removeStashItem('owned', ${idx})">✕</button>
+          <button class="btn btn-sm btn-secondary" onclick="removeStashItem('owned', ${idx})">✕</button>
         </li>
       `).join('') || '<li style="font-size:0.8rem; color:var(--text-muted);">No owned supplies listed.</li>';
 
@@ -448,10 +845,10 @@
           <span>${item}</span>
           <div style="display:flex; gap:4px;">
             <button class="btn btn-sm" title="Move to Owned" onclick="moveWantedToOwned(${idx})">→ Owned</button>
-            <button class="btn btn-sm" onclick="removeStashItem('wanted', ${idx})">✕</button>
+            <button class="btn btn-sm btn-secondary" onclick="removeStashItem('wanted', ${idx})">✕</button>
           </div>
         </li>
-      `).join('') || '<li style="font-size:0.8rem; color:var(--text-muted);">No wanted supplies listed.</li>';
+      `).join('') || '<li style="font-size:0.8rem; color:var(--text-muted);">No wishlist items.</li>';
     }
 
     window.addStashItem = function(type) {
@@ -511,8 +908,10 @@
       document.getElementById('formModalTitle').innerText = 'Add Hobby';
       document.getElementById('hobbyId').value = '';
       document.getElementById('hobbyForm').reset();
+      document.getElementById('inputEmoji').value = '🎨';
       document.getElementById('inputLastDone').valueAsDate = new Date();
       document.getElementById('deleteBtn').style.display = 'none';
+
       document.getElementById('formModalOverlay').classList.add('active');
     };
 
@@ -523,11 +922,11 @@
 
       document.getElementById('formModalTitle').innerText = 'Edit Hobby';
       document.getElementById('hobbyId').value = h.id;
+      document.getElementById('inputEmoji').value = h.emoji || '🎨';
       document.getElementById('inputTitle').value = h.title;
       document.getElementById('inputEnergy').value = h.energy;
       document.getElementById('inputLastDone').value = h.lastDone;
       document.getElementById('inputLocation').value = h.location || '';
-      document.getElementById('inputImg').value = h.img || '';
       document.getElementById('inputFocus').value = h.focus || '';
       document.getElementById('inputResources').value = h.resources || '';
       document.getElementById('deleteBtn').style.display = 'block';
@@ -540,22 +939,22 @@
       if (!window.currentUser) return alert("Please sign in first!");
 
       const id = document.getElementById('hobbyId').value;
+      const emoji = document.getElementById('inputEmoji').value.trim() || '🎨';
       const title = document.getElementById('inputTitle').value.trim();
       const energy = parseInt(document.getElementById('inputEnergy').value);
       const lastDone = document.getElementById('inputLastDone').value;
       const location = document.getElementById('inputLocation').value.trim();
-      const img = document.getElementById('inputImg').value.trim();
       const focus = document.getElementById('inputFocus').value.trim();
       const resources = document.getElementById('inputResources').value.trim();
 
       const existing = window.hobbies.find(h => h.id === id);
 
       const hobbyData = {
+        emoji,
         title,
         energy,
         lastDone,
         location,
-        img,
         focus,
         resources,
         owned: existing ? (existing.owned || []) : [],
