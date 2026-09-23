@@ -659,7 +659,16 @@
         <div style="display:grid; grid-template-columns:80px 1fr; gap:1rem;">
           <div class="form-group">
             <label class="form-label">Emoji</label>
-            <input type="text" id="inputEmoji" class="form-input" style="text-align:center; font-size:1.2rem;" placeholder="🎨" maxlength="4">
+            <input 
+              type="text" 
+              id="inputEmoji" 
+              class="form-input" 
+              style="text-align:center; font-size:1.2rem; cursor:pointer;" 
+              placeholder="🎨" 
+              maxlength="4"
+              onfocus="handleEmojiFocus(this)"
+              onclick="handleEmojiFocus(this)"
+            >
           </div>
 
           <div class="form-group">
@@ -781,6 +790,18 @@
     window.login = () => signInWithPopup(auth, provider);
     window.logout = () => signOut(auth);
 
+    // Auto-select text & pop native emoji picker on supported browsers
+    window.handleEmojiFocus = function(input) {
+      input.select();
+      if ('showPicker' in HTMLInputElement.prototype) {
+        try {
+          input.showPicker();
+        } catch (e) {
+          // Fallback if browser security context blocks showPicker
+        }
+      }
+    };
+
     function getAgingBadge(dateString) {
       if (!dateString) return 'Date unknown';
       const last = new Date(dateString);
@@ -883,7 +904,6 @@
       document.getElementById('detailTitle').innerText = h.title;
       document.getElementById('detailMeta').innerText = `${getAgingBadge(h.lastDone)} • ${energyLabel(h.energy)} ${h.location ? '• ' + h.location : ''}`;
       
-      // Sync inline quick-edit fields without disrupting active typing
       const inlineDate = document.getElementById('detailInlineDate');
       const inlineFocus = document.getElementById('detailInlineFocus');
       const inlineResources = document.getElementById('detailInlineResources');
@@ -900,7 +920,6 @@
       const hobby = window.hobbies.find(h => h.id === window.activeHobbyId);
       if (!hobby) return;
 
-      // Only save if the value actually changed
       if (hobby[field] === val) return;
 
       set(ref(db, `hobbies/${hobby.id}/${field}`), val)
