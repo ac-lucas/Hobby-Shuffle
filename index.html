@@ -467,6 +467,18 @@
       background: #ffffff;
     }
 
+    /* Emoji glyphs render from the emoji font and ignore text color, so a
+       placeholder and a typed value of the same emoji look identical.
+       Dim the whole field while empty so the swap is visible regardless. */
+    #inputEmoji {
+      opacity: 1;
+      transition: opacity 0.15s ease;
+    }
+
+    #inputEmoji:placeholder-shown {
+      opacity: 0.4;
+    }
+
     .inline-date-input {
       background: #fff8fa;
       border: 1.5px solid rgba(255, 105, 180, 0.4);
